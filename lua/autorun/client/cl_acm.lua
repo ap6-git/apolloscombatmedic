@@ -1,4 +1,4 @@
-aCM = {}
+aCM = aCM or {}
 
 include("apolloscombatmedic/config.lua")
 
@@ -219,18 +219,17 @@ net.Receive("aCM.DownedPlayers", function()
 	local downedPlayers = net.ReadTable()
 
 	for ply, panel in pairs(aCM.DownedPlayers) do
-		if type(panel) == "Panel" then
+		if type(panel) == "Panel" and IsValid(panel) then
 			panel:Remove()
 		end
 	end
 
 	for ply, down in pairs(downedPlayers) do
 		if down != false then
-			aCM.DownedPlayers[ply] = vgui.Create("DImage")
+			local img = vgui.Create("DImage")
+			aCM.DownedPlayers[ply] = img
 			aCM.DownedPlayers[ply]:SetImage("icon16/heart.png")
 			aCM.DownedPlayers[ply]:SetSize(32,32)
 		end
 	end
-
-
 end)

@@ -1,6 +1,4 @@
-if aCM == nil then
-	aCM = {}
-end
+aCM = aCM or {}
 
 aCM.DeadScreenFrame = nil
 aCM.CanRespawn = false
@@ -40,7 +38,7 @@ function aCM.DeadScreen()
 	frame:ShowCloseButton(false)
 	frame:SetBackgroundBlur(true)
 	function frame:Paint(w,h) 
-		aCM.BlurPanel(self, 40, 50, Color(0,0,0))
+		aCM.BlurPanel(self, 10, 0, Color(0,0,0))
 		draw.RoundedBox(0, 0, 0, w, h, Color(0,0,0,200))
 	end
 
@@ -100,7 +98,8 @@ function aCM.DeadScreen()
 			display: flex;
 			flex-direction: row;
 			justify-content: center;
-			margin-top: 30vh;
+			position: absolute;
+			bottom: 0;
 		}
 
 		#deathTimerLeft {
@@ -279,7 +278,7 @@ function aCM.RenderNode(type, boneID, hitgroup, amount)
 	-- Draw the indicator that a bone has been broken
 	if type == "bone" then
 		aCM.DrawBone(localPos.x, localPos.y, color)
-		if LocalPlayer():GetWeapon("acm_splint"):Clip1() <= 0 then
+		if IsValid(LocalPlayer():GetWeapon("acm_splint")) and LocalPlayer():GetWeapon("acm_splint"):Clip1() <= 0 then
 			draw.DrawText("No Splints Remaining!", "DermaDefault", localPos.x, localPos.y+10, Color(255,255,255), TEXT_ALIGN_CENTER)
 		end
 	else
@@ -288,7 +287,7 @@ function aCM.RenderNode(type, boneID, hitgroup, amount)
 			draw.DrawText("x"..tostring(amount), "DermaLarge", localPos.x, localPos.y, color, TEXT_ALIGN_LEFT)
 		end
 
-		if LocalPlayer():GetWeapon("acm_bandage"):Clip1() <= 0 then
+		if IsValid(LocalPlayer():GetWeapon("acm_bandage")) and LocalPlayer():GetWeapon("acm_bandage"):Clip1() <= 0 then
 			draw.DrawText("No Bandages Remaining!", "DermaDefault", localPos.x, localPos.y-10, Color(255,255,255), TEXT_ALIGN_CENTER)
 		end
 	end
@@ -409,8 +408,9 @@ end
 function aCM.RenderDownIcons()
 	local shouldContinue = true
 	local ply = LocalPlayer()
-	if aCM.Config.MedicRolesEnabled then
-		if aCM.Config.DarkRPEnabled then
+
+	if aCM.Config.MedicRolesEnabled == true then
+		if aCM.Config.DarkRPEnabled == true then
 			if !table.HasValue(aCM.Config.MedicRoles, ply:Team()) then
 				shouldContinue = false
 			end
@@ -419,15 +419,42 @@ function aCM.RenderDownIcons()
 			if customCheck != true then shouldContinue = false end
 		end
 	end
-	if !shouldContinue then return end
+
+	if shouldContinue != true then 
+		for ply, panel in pairs(aCM.DownedPlayers) do
+			if IsValid(panel) then 
+				panel:Remove() 
+			end
+		end
+
+		return 
+	end
 
 	for ply, panel in pairs(aCM.DownedPlayers) do
-		if !ply:IsValid() then continue end
-		if ply:GetNWEntity("aCM.RagdollEntity") == nil or !ply:GetNWEntity("aCM.RagdollEntity"):IsValid() then 
-			if type(panel) == "Panel" and panel:IsValid() then panel:Remove() end
+		if type(panel) != "Panel" or !IsValid(panel) then 
+			pcall(function()
+				panel:Remove() -- Attempt removal but don't chuck errors
+			end)
+
 			continue 
 		end
-		if type(panel) != "Panel" or !panel:IsValid() then continue end
+
+		if IsValid(panel) then print("1") end
+
+		if !ply:IsValid() then
+			if panel != nil and IsValid(panel) then panel:Remove() end
+			aCM.DownedPlayers[ply] = nil
+
+			continue 
+		end
+
+		if IsValid(panel) then print("2") end
+
+		if !IsValid(ply:GetNWEntity("aCM.RagdollEntity")) then 
+			continue 
+		end
+
+		if IsValid(panel) then print("4") end
 
 		local loc = ply:GetNWEntity("aCM.RagdollEntity"):GetPos():ToScreen()
 		local dist = ply:GetNWEntity("aCM.RagdollEntity"):GetPos():Distance(LocalPlayer():GetPos())

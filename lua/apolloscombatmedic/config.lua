@@ -52,9 +52,21 @@ aCM.Config = { -- Don't touch
 		-- Your weapons go here!
 	},
 
+	-- These damage groups will not be counted in aCM's calculations,
+	-- By default this should be fine but it's here if you'd like to fine-tune behavior.
+	-- Uses DMG enum: https://wiki.facepunch.com/gmod/Enums/DMG
+	DamageBlacklist = {
+		[DMG_POISON] = true,
+		[DMG_RADIATION] = true,
+		[DMG_ACID] = true,
+		[DMG_SLOWBURN] = true,
+		[DMG_DROWN] = true,
+		[DMG_BURN] = true,
+	},
+
 	-- Can only be used in DarkRP. This will let us determine who should see the icon for downed players.
 	-- In other gamemodes, the script will default to everyone seeing the downed player icon.
-	MedicRolesEnabled = false,
+	MedicRolesEnabled = true,
 	DarkRPEnabled = false,
 
 	MedicRoles = {
@@ -68,5 +80,7 @@ aCM.Config = { -- Don't touch
 	--ADVANCED: If you do not have DarkRP but would still like to specify some players as medics, return true on this function.
 	MedicRoleCustomCheck = function(ply)
 		-- Your lua here.
+
+		return IsValid(ply:GetWeapon("acm_medkit")) -- By default, anyone with a trauma kit will be a medic.
 	end
 } -- Don't touch

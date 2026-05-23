@@ -638,6 +638,10 @@ hook.Add("EntityTakeDamage", "aCM.EntityTakeDamage", function(target, dmgInfo)
 	if target == nil or !IsValid(target) then return end
 	if !target:IsPlayer() then return end
 	
+	if aCM.Config.DamageBlacklist[dmgInfo:GetDamageType()] != nil then
+		return false
+	end
+
 	if dmgInfo:GetWeapon() != nil and dmgInfo:GetWeapon():IsValid() then
         if aCM.Config.WeaponBlacklist[dmgInfo:GetWeapon():GetClass()] == true then
             return
