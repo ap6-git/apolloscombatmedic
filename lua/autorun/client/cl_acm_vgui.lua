@@ -295,6 +295,9 @@ end
 
 -- Show the overlay for all of the bleeds
 function aCM.RenderBleeds()
+	if !IsValid(LocalPlayer()) or !LocalPlayer():Alive() then return end
+	if !IsValid(LocalPlayer():GetActiveWeapon()) then return end
+	
 	if LocalPlayer():GetActiveWeapon():GetClass() != "acm_bandage" and LocalPlayer():GetActiveWeapon():GetClass() != "acm_medkit" then return end
 
 	for bone, amount in pairs(aCM.Patient.aCM.bleedBonePositions) do
@@ -439,8 +442,6 @@ function aCM.RenderDownIcons()
 			continue 
 		end
 
-		if IsValid(panel) then print("1") end
-
 		if !ply:IsValid() then
 			if panel != nil and IsValid(panel) then panel:Remove() end
 			aCM.DownedPlayers[ply] = nil
@@ -448,13 +449,9 @@ function aCM.RenderDownIcons()
 			continue 
 		end
 
-		if IsValid(panel) then print("2") end
-
 		if !IsValid(ply:GetNWEntity("aCM.RagdollEntity")) then 
 			continue 
 		end
-
-		if IsValid(panel) then print("4") end
 
 		local loc = ply:GetNWEntity("aCM.RagdollEntity"):GetPos():ToScreen()
 		local dist = ply:GetNWEntity("aCM.RagdollEntity"):GetPos():Distance(LocalPlayer():GetPos())
