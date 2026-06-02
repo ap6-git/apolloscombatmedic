@@ -114,9 +114,10 @@ hook.Add("player_activate", "aCM.PlayerActivate", function(data)
 end)
 
 hook.Add("Think", "aCM.Think", function()
+	if !IsValid(LocalPlayer()) then return end
 	if !LocalPlayer():Alive() then return end
-
 	local ent = LocalPlayer():GetEyeTrace().Entity
+
 	if ent == nil or !IsValid(ent) then return end
 	if ent:GetNWBool("aCM.Ragdoll") != true then return end
 

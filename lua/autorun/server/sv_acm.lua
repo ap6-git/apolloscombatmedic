@@ -406,7 +406,7 @@ function aCM.StopRagdollPlayer(ply, noSpawn)
     net.Send(ply)
 
     for bone,broken in pairs(ply.aCM.brokenBones) do
-    	if broken != true then return end
+    	if broken != true then continue end
 
     	if bone == HITGROUP_CHEST or bone == HITGROUP_LEFTLEG or bone == HITGROUP_RIGHTLEG then
     		aCM.AdjustSpeeds(ply, true)

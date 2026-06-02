@@ -1,6 +1,6 @@
 aCM.Config = { -- Don't touch
 	-- This determines how much health the Trauma Kit will give out every 2 seconds
-	TraumaKitHealth = 25,
+	TraumaKitHealth = 50,
 
 	 -- Set to false to remove leg damage completely. This won't make you not take damage when shot in the leg, it just makes the script not apply status effects to you.
 	LegDamage = true, 
@@ -12,14 +12,14 @@ aCM.Config = { -- Don't touch
 	-- Should the breaking of bones be enabled? This only happens to the legs and arms.
 	BrokenBones = true,
 		-- When taking damage in the legs and arms, there will be x amount of chance you break a bone.
-		BrokenBoneChance = 50,
+		BrokenBoneChance = 5,
 		FallDamageBreaksLegs = true,
-		BrokenRibsPreventSprint = true,
+		BrokenRibsPreventSprint = false,
 
 	-- Should bleeding (and blood loss) be enabled?
 	Bleeding = true,
 		-- If the below is set to false, one bandage will be required for every bleed (every gunshot, etc.)
-		BandageFixesWholePart = false,
+		BandageFixesWholePart = true,
 		-- May be too gruesome for the queasy, just stops the script from making blood decals.
 		BloodVisuals = true,
 
@@ -37,7 +37,7 @@ aCM.Config = { -- Don't touch
 	AssessmentTime = 5,
 
 	-- How much health should players get revived with?
-	RespawnHealth = 30,
+	RespawnHealth = 15,
 
 	-- If set to true and the killing blow was to the players head, they do not ragdoll and thus do not have the chance to be revived. They will be fully dead.
 	-- This doesn't change the amount of damage to the player, and only counts the damage that killed the player (so if a player gets shot in the head and lives, it won't count)
